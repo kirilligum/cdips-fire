@@ -13,13 +13,16 @@ def col_to_list(dv):
     return dv
 
 
-def transform(data,vars): # takes pandas.read_csv and list of strings of variables, and returns onehot matrix
+def transform(data,cols): # takes pandas.read_csv and list of strings of variables, and returns onehot matrix
     d =[]
-    for i in vars:
+    for i in cols:
         dv= data.ix[:,i]
         if i=='var4': # taking care of categories by making another label of just the letter (label[0])
             cdv = []
-            cdv = [x[0] for x in list(set(dv)) if len(x)>1 and int(x[1])>1] # truncating to the first letter and remove letters with only one number child
+            cdv = [x[0] if (len(x)>1 and int(x[1])>1) else 'X' for x in dv] # truncating to the first letter and remove letters with only one number child
+            #this adds in dummy X's, but I believe they are necessary as place-holders
+            #(previous version of onehot.transform did not seem to work for var4)
+            #can possibly remove 'X' column later?
             d.append(col_to_list(cdv))
         d.append(col_to_list(dv))
     enc = OneHotEncoder()
