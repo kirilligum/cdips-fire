@@ -1,6 +1,7 @@
+from __future__ import division
 import numpy as np
 import pandas as pd
-from __future__ import division
+import random
 
 def random_bool(bs,n):
     #Randomly down-sample boolean series (bs) to n True entries
@@ -26,4 +27,8 @@ def selector(data, n_train_fire, n_train_nofire, n_validate):
         raise Exception("Too many fires! (validation set too large or number of training fires too large)")
     use_validate = random_bool((~use_train & had_fire), n_validate_fire) | \
                     random_bool((~use_train & ~had_fire), n_validate_nofire)
+    #note: pandas supports boolean indexing w/ boolean list
+    #numpy seems to only support boolean indexing if the boolean list is also a numpy array
+    use_train = np.array(use_train)
+    use_validate = np.array(use_validate)
     return (use_train, use_validate)
