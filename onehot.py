@@ -4,8 +4,9 @@ from sklearn.preprocessing import OneHotEncoder
 
 def col_to_list(dv):
     enum = list(set(dv))
-    if enum.count('Z'):
-        enum.insert(len(enum),enum.pop(enum.index('Z'))) #move Z (missing value) to be the last element
+    enum.sort() #set is unordered; could lead to problems of column mismatch later, so best to sort....
+#     if enum.count('Z'):
+#         enum.insert(len(enum),enum.pop(enum.index('Z'))) #move Z (missing value) to be the last element
     for x in range(0,len(dv)):
         for i in range(0,len(enum)):
             if dv[x] == enum[i]:
