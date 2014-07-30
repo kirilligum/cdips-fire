@@ -20,10 +20,10 @@ def transform(data,cols): # takes pandas.read_csv and list of strings of variabl
         dv= data.ix[:,i]
         if i=='var4': # taking care of categories by making another label of just the letter (label[0])
             cdv = []
-            cdv = [x[0] if (len(x)>1 and int(x[1])>1) else 'X' for x in dv] # truncating to the first letter and remove letters with only one number child
-            #this adds in dummy X's, but I believe they are necessary as place-holders
-            #(previous version of onehot.transform did not seem to work for var4)
-            #can possibly remove 'X' column later?
+            parents = [x[0] for x in list(set(dv)) if len(x)>1 and int(x[1])==2] # truncating to the first letter and remove letters with only one number child
+            parents.sort()
+            print parents
+            cdv = [x[0] if (parents.count(x[0])) else 0 for x in dv] # truncating to the first letter and remove letters with only one number child
             d.append(col_to_list(cdv))
         d.append(col_to_list(dv))
     enc = OneHotEncoder()
