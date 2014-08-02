@@ -57,7 +57,7 @@ print " starting shuffle rows"
 start = time.clock()
 rows = list(prep.index)
 random.shuffle(rows)
-prep.reindex(rows)
+prep = prep.ix[rows]
 end = time.clock()
 print "time = ", end-start
 
