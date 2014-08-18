@@ -24,13 +24,15 @@ for index, row in target_data.iteritems():
     else:
         zeros += [index]
 
-random.shuffle(nonzeros)
-nonzeros =  nonzeros[:1100]
-nonzeros.sort()
-random.shuffle(zeros)
-zeros =  zeros[:8900]
-zeros.sort()
+print len(nonzeros)
+print len(zeros)
+#random.shuffle(nonzeros)
+#nonzeros =  nonzeros[:1100]
+#nonzeros.sort()
+#random.shuffle(zeros)
+#zeros =  zeros[:8900]
+#zeros.sort()
 
-sub_data = data.iloc[zeros+nonzeros]
+#sub_data = data.iloc[zeros+nonzeros]
 
-sub_data.to_csv('znz_subset.csv')
+#sub_data.to_csv('znz_subset.csv')
