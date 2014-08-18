@@ -7,12 +7,14 @@ from sklearn.ensemble import RandomForestRegressor
 #from sklearn.metrics import accuracy_score
 #import random
 #import pickle
+from gini import normalized_weighted_gini
 
 folds=10
 scores = []
 training_scores = []
 predicts = []
-for i in range(1):
+ginis = []
+for i in range(10):
     filename = ("../prep/oh_imp_train_%d.csv" % (i))
     data_train = pd.read_csv(filename)
     target_train = data_train['target']
@@ -38,19 +40,21 @@ for i in range(1):
     score = forest.score(data_test,target_test)
     scores +=[score]
     training_scores +=[training_score]
+    gn = normalized_weighted_gini(target_test,predict_loc,data_test.var11)
+    ginis +=[gn]
 
-    df= pd.concat([pd.DataFrame(predict_loc,columns=['predicted']),target_test,data_test['var11']],axis=1)
-    df.sort(columns='predicted')
-    df["base"] = (df['var11'] / df['var11'].sum()).cumsum()
-    print df
-    total_pos = (df.target * df['var11']).sum()
-    df["cum_pos_found"] = (df.target * df.var11).cumsum()
-    df["lorentz"] = df.cum_pos_found / total_pos
-    df["gini"] = (df.lorentz - df.base) * df['var11']
-    print df.gini.sum()
+    #df= pd.concat([pd.DataFrame(predict_loc,columns=['predicted']),target_test,data_test['var11']],axis=1)
+    #df.sort(columns='predicted')
+    #df["base"] = (df['var11'] / df['var11'].sum()).cumsum()
+    #print df
+    #total_pos = (df.target * df['var11']).sum()
+    #df["cum_pos_found"] = (df.target * df.var11).cumsum()
+    #df["lorentz"] = df.cum_pos_found / total_pos
+    #df["gini"] = (df.lorentz - df.base) * df['var11']
+    #print df.gini.sum()
 
+print "gini: ",ginis, pd.DataFrame(ginis).describe()
 #print predicts
-print training_scores
-print scores
-#print pd.DataFrame(scores).describe()
+print "training_scores: ",training_scores, pd.DataFrame(training_scores).describe()
+print "score: ",scores, pd.DataFrame(scores).describe()
 
