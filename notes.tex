@@ -1,0 +1,52 @@
+%%fakesection
+\documentclass{article}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{soul}
+\usepackage{fullpage}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{pifont}
+\usepackage{gnuplottex}
+\usepackage{float}
+
+
+\let\Item\item
+\renewcommand\item{\normalcolor\Item}
+
+\newcommand\ml{\color[RGB]{153, 150, 204}} %may be later
+\newcommand\later{\color[RGB]{153, 204, 150}} %later
+\newcommand\nn{\color[RGB]{124, 124, 255}} %no need to do
+\newcommand\done{\color[RGB]{129, 180, 185} \ding{52} }
+\newcommand\now{\color[RGB]{255, 0, 0}} %current
+
+\begin{document}
+
+\section{doing}
+\subsection{unbalanced data adjustment through boosting}
+\subsection{classification followed by regression}
+\section{to do}
+\section{to do priority unsorted}
+\subsection{reduce features based on $R^2$}
+\subsection{ask about negative $R^2$}
+\subsection{ask about plotting panda's describe}
+\section{plan}
+%%%%%%%%%%%%%%%%%%
+\section{done}
+\subsection{calculate gini}
+Tue Aug 19 22:47:38 PDT 2014
+\subsection{get var11}
+Thu Aug 14 13:07:11 PDT 2014
+
+var 11 is needed to calculate gini coefficient.
+
+when we processed the data, we changed the names of the columns. we need to fix that.
+Thu Aug 14 14:52:17 PDT 2014
+\subsection{clasifier score}
+Wed Aug 13 14:43:55 PDT 2014
+
+score for clasifier only works if the targets are labels.
+\subsection{prep - imputing and one hot}
+Mon Aug 11 12:35:12 PDT 2014
+\subsection{non-zero/zero 10-fold subsets}
+Mon Aug 11 08:56:56 PDT 2014
+\end{document}
