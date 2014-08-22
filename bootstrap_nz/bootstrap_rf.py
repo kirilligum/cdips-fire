@@ -14,7 +14,7 @@ scores = []
 training_scores = []
 predicts = []
 ginis = []
-for i in range(1):
+for i in range(10):
     filename = ("../prep/oh_imp_train_%d.csv" % (i))
     data_train = pd.read_csv(filename)
     target_train = data_train['target']
@@ -34,32 +34,33 @@ for i in range(1):
         else:
             zeros += [index]
 
-    print len(nonzeros)
-    print len(zeros)
+    print "nonzeros = ",len(nonzeros), "; zeros = ", len(zeros)
 
-    bootstrap_target_train = target_train[[random.choice(nonzeros)]]
-    bootstrap_target_train = bootstrap_target_train.append(target_train[[random.choice(nonzeros)]])
-    bootstrap_data_train = data_train.ix[random.choice(nonzeros),:]
-    print bootstrap_target_train.shape, type(bootstrap_target_train),bootstrap_data_train.shape
+    #bootstrap_target_train = target_train[[random.choice(nonzeros)]]
+    bootstrap_target_train = pd.Series()
+    bootstrap_data_train = pd.DataFrame(columns= data_train.columns)
 
     #n_bootstrap_samples = len(nonzeros)
-    #n_bootstrap_samples = len(nonzeros)+int((len(zeros)-len(nonzeros))*znz_ratio)
-    #samples = []
-    #for i in range(n_bootstrap_samples-1):
-        #samples += [random.choice(nonzeros)]
-    #print samples
-    #bootstrap_target_train = bootstrap_target_train.append(target_train[samples])
-    #print bootstrap_data_train.shape, data_train.shape, bootstrap_target_train.shape
-    #bootstrap_data_train = pd.concat([bootstrap_data_train,data_train[samples]])
-    #bootstrap_data_train = bootstrap_data_train.append(data_train[samples])
+    n_bootstrap_samples = len(nonzeros)+int((len(zeros)-len(nonzeros))*znz_ratio)
+    samples = []
+    for i in range(n_bootstrap_samples):
+        samples += [random.choice(nonzeros)]
+        #bootstrap_target_train = bootstrap_target_train.append(target_train[[samples[-1]]])
+        #bootstrap_data_train = bootstrap_data_train.append(data_train.ix[samples[-1],:])
+    bootstrap_target_train = bootstrap_target_train.append(target_train[samples])
+    bootstrap_data_train = bootstrap_data_train.append(data_train.ix[samples,:])
 
-    #print "n_bootstrap_samples = ",n_bootstrap_samples
-    print "bootstrap_target_train",len(bootstrap_target_train),bootstrap_target_train.values
-    #print "target_train",target_train[nonzeros]
-    #print "bootstrap_data_train",len(bootstrap_data_train),bootstrap_data_train.values
-    #print "data_train",data_train[nonzeros]
+    #print "bootstrap_target_train",len(bootstrap_target_train),
+    #print "bootstrap_data_train",len(bootstrap_data_train)
 
-    #print "",data_train.shape, "  ", data_test.shape ,"  " , target_train.shape, " ", target_test.shape
+    #print target_train.shape, data_train.shape
+    target_train.drop(nonzeros,inplace=1)
+    data_train.drop(nonzeros,inplace=1)
+    #print target_train.shape, data_train.shape
+    target_train = target_train.append(bootstrap_target_train)
+    data_train = data_train.append(bootstrap_data_train)
+    #print target_train.shape, data_train.shape
+
 
     #print" starting rf"
     start = time.clock()
@@ -88,7 +89,7 @@ for i in range(1):
     #df["gini"] = (df.lorentz - df.base) * df['var11']
     #print df.gini.sum()
 
-#print "gini: ",ginis, pd.DataFrame(ginis).describe()
-#print "training_scores: ",training_scores, pd.DataFrame(training_scores).describe()
-#print "score: ",scores, pd.DataFrame(scores).describe()
+print "gini: ",ginis, pd.DataFrame(ginis).describe()
+print "training_scores: ",training_scores, pd.DataFrame(training_scores).describe()
+print "score: ",scores, pd.DataFrame(scores).describe()
 
