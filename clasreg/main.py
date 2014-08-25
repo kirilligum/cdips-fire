@@ -24,6 +24,8 @@ folds=10
 rf_times = []
 scores = []
 training_scores = []
+predicts_class = []
+predicts_regres = []
 predicts = []
 correct_targets = []
 ginis = []
@@ -48,25 +50,31 @@ for i in range(folds):
 
     start = time.clock()
     rfc= RandomForestClassifier(n_jobs=-1)
-    rfr = RandomForestRegressor(n_estimators = 100,n_jobs=-1)
+    rfr = RandomForestRegressor(n_jobs=-1)
     rfc = rfc.fit(data_train,target_train)
+    rfr = rfr.fit(nz_data_train,nz_target_train)
     end = time.clock()
 
-    predict_loc = rfc.predict(data_test)
-    correct_targets += [float(len(target_test[target_test==1])-len(predict_loc[predict_loc==1]))/len(predict_loc)]
-    ##training_score = rfc.score(data_train,target_train)
-    ##score = rfc.score(data_test,target_test)
+    predict_loc_class = rfc.predict(data_test)
+    predict_loc_regres = rfr.predict(data_test)
+    predict = [a*b for a,b in zip(predict_loc_class,predict_loc_regres)]
+    correct_targets += [float(len(target_test[target_test==1])-len(predict_loc_class[predict_loc_class==1]))/len(predict_loc_class)]
+    #training_score = rfc.score(data_train,target_train)
+    #score = rfc.score(data_test,target_test)
 
     rf_times += [end-start]
-    predicts += [predict_loc]
+    predicts_class += [predict_loc_class]
+    predicts += [predict]
     ##scores +=[score]
     ##training_scores +=[training_score]
-    gn = normalized_weighted_gini(target_test,predict_loc,data_test.var11)
+    #gn = normalized_weighted_gini(target_test,predict_loc_class,data_test.var11)
+    gn = normalized_weighted_gini(target_test,predict,data_test.var11)
     ginis +=[gn]
 
 print "rf_times",np.array(rf_times).mean(),"x",len(rf_times)
 #print "training_scores: ",training_scores, pd.DataFrame(training_scores).mean()
 print "correct_targets = " , np.array(correct_targets).mean(), correct_targets
+#print "predicts = ", predicts
 print "gini: ", np.array(ginis).mean(), np.array(ginis)
 #print "score: ", np.array(scores).mean()
 
