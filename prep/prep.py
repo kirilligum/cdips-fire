@@ -9,9 +9,11 @@ import time
 
 folds=10
 for i in range(folds):
-    filename = ("../znz_subset/znz_train_%d.csv" % (i))
+    #filename = ("../znz_subset/znz_train_%d.csv" % (i))
+    filename = ("../znz_data/znz_train_%d.csv" % (i))
     data_train = pd.read_csv(filename)
-    filename = ("../znz_subset/znz_test_%d.csv" % (i))
+    #filename = ("../znz_subset/znz_test_%d.csv" % (i))
+    filename = ("../znz_data/znz_test_%d.csv" % (i))
     data_test = pd.read_csv(filename)
     data = pd.concat([data_train,data_test])
     print data_train.shape, "  ", data_test.shape ,"  " , data.shape
@@ -44,12 +46,12 @@ for i in range(folds):
     end = time.clock()
     print "time = ", end-start
 
-    filename = ("oh_imp_train_%d.csv" % (i))
+    filename = ("oh_imp_all_train_%d.csv" % (i))
     train_columns = train.columns
     train = pd.DataFrame(train_imp, columns=train_columns)
     outdata = pd.concat([train,data_train.ix[:,'target']],axis=1)
     outdata.to_csv(filename)
-    filename = ("oh_imp_test_%d.csv" % (i))
+    filename = ("oh_imp_all_test_%d.csv" % (i))
     test_columns = test.columns
     test = pd.DataFrame(test_imp, columns=test_columns)
     outdata = pd.concat([test,data_test.ix[:,'target']],axis=1)

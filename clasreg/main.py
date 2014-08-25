@@ -30,16 +30,17 @@ predicts = []
 correct_targets = []
 ginis = []
 for i in range(folds):
-    filename = ("../prep/oh_imp_train_%d.csv" % (i))
+    filename = ("../prep/oh_imp_all_train_%d.csv" % (i))
     data_train = pd.read_csv(filename)
     target_train = data_train['target']
     data_train.drop('target',axis=1,inplace=True)
-    filename = ("../prep/oh_imp_test_%d.csv" % (i))
+    filename = ("../prep/oh_imp_all_test_%d.csv" % (i))
     data_test = pd.read_csv(filename)
     target_test = data_test['target']
     data_test.drop('target',axis=1,inplace=True)
 
     nz_target_train,nz_data_train = get_nz(target_train,data_train)
+    nz_target_test,nz_data_test = get_nz(target_test,data_test)
 
     target_train[target_train!=0]=1
     data_train.drop('target',axis=1,inplace=True)
@@ -51,6 +52,8 @@ for i in range(folds):
     start = time.clock()
     rfc= RandomForestClassifier(n_jobs=-1)
     rfr = RandomForestRegressor(n_jobs=-1)
+    #rfc= RandomForestClassifier(n_estimators = 1000,n_jobs=-1)
+    #rfr= RandomForestRegressor(n_estimators = 1000,n_jobs=-1)
     rfc = rfc.fit(data_train,target_train)
     rfr = rfr.fit(nz_data_train,nz_target_train)
     end = time.clock()
@@ -60,12 +63,12 @@ for i in range(folds):
     predict = [a*b for a,b in zip(predict_loc_class,predict_loc_regres)]
     correct_targets += [float(len(target_test[target_test==1])-len(predict_loc_class[predict_loc_class==1]))/len(predict_loc_class)]
     #training_score = rfc.score(data_train,target_train)
-    #score = rfc.score(data_test,target_test)
+    score = rfr.score(nz_data_test,nz_target_test)
 
     rf_times += [end-start]
     predicts_class += [predict_loc_class]
     predicts += [predict]
-    ##scores +=[score]
+    scores +=[score]
     ##training_scores +=[training_score]
     #gn = normalized_weighted_gini(target_test,predict_loc_class,data_test.var11)
     gn = normalized_weighted_gini(target_test,predict,data_test.var11)
@@ -73,8 +76,7 @@ for i in range(folds):
 
 print "rf_times",np.array(rf_times).mean(),"x",len(rf_times)
 #print "training_scores: ",training_scores, pd.DataFrame(training_scores).mean()
-print "correct_targets = " , np.array(correct_targets).mean(), correct_targets
-#print "predicts = ", predicts
-print "gini: ", np.array(ginis).mean(), np.array(ginis)
-#print "score: ", np.array(scores).mean()
+print "correct_targets = " , np.array(correct_targets).mean(), np.array(correct_targets).std(), np.array(correct_targets).ptp()
+print "score: ", np.array(scores).mean(), np.array(scores).std(), np.array(scores).ptp()
+print "gini: ", np.array(ginis).mean(), np.array(ginis).std(), np.array(ginis).ptp()
 
