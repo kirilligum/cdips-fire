@@ -22,9 +22,45 @@
 \begin{document}
 
 \section{doing}
-\subsection{unbalanced data adjustment through boosting}
-\subsection{classification followed by regression}
+\subsection{submit bootstrapped classification followed by regression}
+
+
+\begin{itemize}
+  \item make sure the classified zero targets are well combined with regressed targets
+  \item make a trial calculation on the subset of data
+  \item do a cross validation
+  \item do a kaggle submission
+\end{itemize}
+
+
+\subsection{build two drivers for cv and for submission}
+probably I would have to implement fit, predict and score
 \section{to do}
+\subsection{mpi}
+may be if aprun without parameters doesn't work
+\subsection{better imputing}
+use either gam and multiple imputing, or rf proximities
+
+for random forest, using proximities is similar to just using rf.
+
+use rf regression for the continuous missing data 
+
+use rf classification for discrete 
+
+\subsection{multiple models}
+
+do rf, svm and other regressions
+
+vary parameters to have more models
+
+use rf to regress
+
+\subsection{multiclass help for regression}
+
+plot the distribution of the targets either from the training set or from regression prediction.
+
+break the targets in sorted groups. these groups are the classes
+
 \section{to do priority unsorted}
 \subsection{reduce features based on $R^2$}
 \subsection{ask about negative $R^2$}
@@ -32,6 +68,27 @@
 \section{plan}
 %%%%%%%%%%%%%%%%%%
 \section{done}
+\subsection{simple submission}
+Thu Aug 28 21:39:02 PDT 2014
+
+onhot, imputing and random forest regression on all data
+
+failed.
+
+got -0.14 gini which is smaller then no model
+
+\subsection{classification followed by regression}
+Thu Aug 28 21:48:31 PDT 2014
+
+the same thing. it showed some improvement but not that much due to really high variance.
+
+\subsection{unbalanced data adjustment through boosting}
+Thu Aug 28 21:48:35 PDT 2014
+
+k-fold measurement didn't show much improvement
+
+there is still too much variation in the gini coefficient 
+
 \subsection{calculate gini}
 Tue Aug 19 22:47:38 PDT 2014
 \subsection{get var11}

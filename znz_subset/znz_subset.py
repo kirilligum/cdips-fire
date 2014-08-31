@@ -76,8 +76,8 @@ for i in range(folds):
 
   filename = ("znz_train_%d.csv" % (i))
   sub_data = data.iloc[cv_sets_nonzeros_indecies_train+cv_sets_zeros_indecies_train]
-  sub_data.to_csv(filename)
+  sub_data.to_csv(filename,index=0)
   filename = ("znz_test_%d.csv" % (i))
   sub_data = data.iloc[cv_sets_nonzeros_indecies_test+cv_sets_zeros_indecies_test]
   #sub_data = data.iloc[cv_sets_nonzeros_indecies_test]
-  sub_data.to_csv(filename)
+  sub_data.to_csv(filename,index=0)
