@@ -6,6 +6,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.ensemble import RandomForestRegressor
 #from sklearn.metrics import accuracy_score
 from bootstrap_znz import bootstrap_znz
+from sklearn import svm
+from sklearn.cross_validation import KFold
 #from gini import normalized_weighted_gini
 
 def get_nz(target_train,data_train):
@@ -39,6 +41,46 @@ data_train.drop('target',axis=1,inplace=True)
 target_train,data_train = bootstrap_znz(target_train,data_train)
 
 start = time.clock()
+
+###############################################################
+###### begin model
+
+## make a list of models
+rf = RandomForestRegressor(n_jobs=-1)
+svm = svm.SVR()
+models = [rf,svm]
+
+#### cv train of stackers
+#kf = KFold(5, n_folds=2,shuffle=True)
+kf = KFold(len(nz_data_train), n_folds=10,shuffle=True)
+kfold_data_train = []
+kfold_target_train = []
+kfold_data_test = []
+kfold_target_test = []
+for train, test in kf:
+    #print("%s %s" % (train, test))
+    #print nz_data_train.shape, nz_data_train.iloc[train].shape,"  -  ",
+    #print nz_target_train.shape, nz_target_train.iloc[train].shape
+    kfold_data_train += [nz_data_train.iloc[train]]
+    kfold_target_train += [nz_target_train.iloc[train]]
+    kfold_data_test += [nz_data_train.iloc[test]]
+    kfold_target_test += [nz_target_train.iloc[test]]
+#for i in range(len(kfold_data_train)):
+    #print kfold_data_train[i].shape,kfold_target_train[i].shape, kfold_data_test[i].shape, kfold_target_test[i].shape
+#print kfold_data_train[0].shape
+#print kfold_target_train[0].shape
+#print kfold_data_train[1].shape
+#print kfold_target_train[1].shape
+## create folds
+## fit models
+## predict
+## fit stackers
+
+#### stack
+## fit all models
+## predict from all models
+## predict and average stackers
+
 rfc= RandomForestClassifier(n_jobs=-1)
 rfr = RandomForestRegressor(n_jobs=-1)
 #rfc= RandomForestClassifier(n_estimators = 1000,n_jobs=-1)
@@ -47,10 +89,12 @@ rfc = rfc.fit(data_train,target_train)
 rfr = rfr.fit(nz_data_train,nz_target_train)
 predict_loc_class = pd.DataFrame({"target":rfc.predict(data_test), "id": data_test['id']})
 nz_target_test,nz_data_test = get_nz(predict_loc_class['target'],data_test)
-#rfr = rfr.fit(data_train,target_train)
-end = time.clock()
-
 predict_loc_regres = pd.DataFrame({"target":rfr.predict(nz_data_test), "id": nz_data_test['id']})
+
+###### end model
+###############################################################
+
+end = time.clock()
 
 #### merge regressed and 0s while preserving the order
 predicted = pd.DataFrame(columns=predict_loc_class.columns)
@@ -65,6 +109,10 @@ predicted[['id']] = predicted[['id']].astype(int)
 
 filename = ("predicted.csv")
 predicted.to_csv(filename,index=0)
+
+
+
+
 #predict = [a*b for a,b in zip(predict_loc_class,predict_loc_regres)]
 #correct_targets += [float(len(target_test[target_test==1])-len(predict_loc_class[predict_loc_class==1]))/len(predict_loc_class)]
 #training_score = rfc.score(data_train,target_train)
