@@ -48,8 +48,8 @@ start = time.clock()
 
 ###### do classification
 #rfc= RandomForestClassifier(n_jobs=-1)
-rfc= RandomForestClassifier(n_estimators = 100,n_jobs=-1)
-rfr= RandomForestRegressor(n_estimators = 100,n_jobs=-1)
+rfc= RandomForestClassifier(n_estimators = 10,n_jobs=-1)
+rfr= RandomForestRegressor(n_estimators = 10,n_jobs=-1)
 rfc = rfc.fit(data_train,target_train)
 predict_loc_class = pd.DataFrame({"target":rfc.predict(data_test), "id": data_test['id']},index=data_test.index)
 nz_target_test,nz_data_test = get_nz(predict_loc_class['target'],data_test)

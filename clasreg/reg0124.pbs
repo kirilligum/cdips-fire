@@ -1,0 +1,10 @@
+#PBS -q regular
+#PBS -A m2063 
+#PBS -l mppwidth=24
+#PBS -l walltime=00:58:58
+#PBS -m n
+#PBS -V
+
+cd $PBS_O_WORKDIR
+module load anaconda
+aprun python znz_subset.py

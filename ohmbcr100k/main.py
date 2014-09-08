@@ -23,13 +23,13 @@ def get_nz(target_train,data_train):
     nz_data_train = data_train.drop(zeros)
     return nz_target_train,nz_data_train
 
-#filename = ("train.csv")
-filename = ("../data/oh_imp_train.csv")
+filename = ("train.csv")
+#filename = ("../data/oh_imp_train.csv")
 data_train = pd.read_csv(filename)
 target_train = data_train['target']
 data_train.drop('target',axis=1,inplace=True)
-#filename = ("test.csv")
-filename = ("../data/oh_imp_test.csv")
+filename = ("test.csv")
+#filename = ("../data/oh_imp_test.csv")
 data_test = pd.read_csv(filename)
 
 nz_target_train,nz_data_train = get_nz(target_train,data_train)
@@ -48,8 +48,8 @@ start = time.clock()
 
 ###### do classification
 #rfc= RandomForestClassifier(n_jobs=-1)
-rfc= RandomForestClassifier(n_estimators = 100,n_jobs=-1)
-rfr= RandomForestRegressor(n_estimators = 100,n_jobs=-1)
+rfc= RandomForestClassifier(n_estimators = 100000,n_jobs=-1)
+rfr= RandomForestRegressor(n_estimators = 100000,n_jobs=-1)
 rfc = rfc.fit(data_train,target_train)
 predict_loc_class = pd.DataFrame({"target":rfc.predict(data_test), "id": data_test['id']},index=data_test.index)
 nz_target_test,nz_data_test = get_nz(predict_loc_class['target'],data_test)
