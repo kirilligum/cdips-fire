@@ -20,7 +20,7 @@ def get_nz(target_train,data_train):
     nz_data_train = data_train.drop(zeros)
     return nz_target_train,nz_data_train
 
-folds=10
+folds=1
 rf_times = []
 scores = []
 training_scores = []
