@@ -1,0 +1,2 @@
+time =  4073.64
+Application 7139335 resources: utime ~10841s, stime ~17s, Rss ~10634648, inblocks ~7313116, outblocks ~10303

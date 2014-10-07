@@ -1,0 +1,2 @@
+Application 7096703 exit signals: Terminated
+Application 7096703 resources: utime ~3404s, stime ~17s, Rss ~9951900, inblocks ~7313107, outblocks ~725

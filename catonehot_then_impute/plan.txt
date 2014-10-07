@@ -1,0 +1,27 @@
++ change Z to NA
++ add var4 root as another column. 
++ take the column out of train and predict data (td and pd).
++ skip missing values.
++ train one hot on it.
++ remember the locations of missing values in pd.
++ imput the nanas with median or first non-nan variable or "A".
++ transform with onehot.
++ put the missing values back in.
++ save the feature_indecies_.
++ put the transformed columns back. do for all columns. -->  i just return the new columns
++ check the previous
++ one hot while keeping NaN. skip var4 parent, save feature_indices_ so that we can add the parent later
++ separate onehot out from imputing.
+
+- prepare data
+- do cross validation and submission on the oh data.
+
+- use different ways of imputing
+
+- reduce number of features
+
+- reduce number of rows
+
+- do stacking
+
+- optimize models

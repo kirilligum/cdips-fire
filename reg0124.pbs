@@ -1,0 +1,18 @@
+#PBS -q regular
+#PBS -A m2063 
+#PBS -l mppwidth=48
+#PBS -l walltime=00:58:58
+#PBS -m n
+#PBS -V
+
+cd $PBS_O_WORKDIR
+module load anaconda
+export OMP_NUM_THREADS=24
+#python prep.py > out.txt
+cd ohmbcrsimu1
+aprun -n 1 -N 1 -d 24 python main.py > out.txt &
+cd ..
+cd ohmbcrsimu2
+aprun -n 1 -N 1 -d 24 python main.py > out.txt &
+cd ..
+wait

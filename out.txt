@@ -1,0 +1,2 @@
+Application 7137044 exit codes: 2
+Application 7137044 resources: utime ~0s, stime ~0s, Rss ~11976, inblocks ~1027, outblocks ~19

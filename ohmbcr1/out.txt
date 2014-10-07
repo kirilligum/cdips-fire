@@ -1,0 +1,1 @@
+Application 7097090 resources: utime ~7012s, stime ~16s, Rss ~9951904, inblocks ~7313107, outblocks ~10303

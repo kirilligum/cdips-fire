@@ -1,0 +1,3 @@
+time =  439.55
+Application 7130013 exit signals: Terminated
+Application 7130013 resources: utime ~2452s, stime ~16s, Rss ~9951864, inblocks ~7313114, outblocks ~723

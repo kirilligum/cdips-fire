@@ -1,0 +1,10 @@
+znz10_train_0prep.csv znz10_test_0prep.csv
+znz10_train_1prep.csv znz10_test_1prep.csv
+znz10_train_2prep.csv znz10_test_2prep.csv
+znz10_train_3prep.csv znz10_test_3prep.csv
+znz10_train_4prep.csv znz10_test_4prep.csv
+znz10_train_5prep.csv znz10_test_5prep.csv
+znz10_train_6prep.csv znz10_test_6prep.csv
+znz10_train_7prep.csv znz10_test_7prep.csv
+znz10_train_8prep.csv znz10_test_8prep.csv
+znz10_train_9prep.csv znz10_test_9prep.csv

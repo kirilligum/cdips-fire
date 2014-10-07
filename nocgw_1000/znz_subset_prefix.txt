@@ -1,0 +1,10 @@
+znz10_train_0.csv znz10_test_0.csv
+znz10_train_1.csv znz10_test_1.csv
+znz10_train_2.csv znz10_test_2.csv
+znz10_train_3.csv znz10_test_3.csv
+znz10_train_4.csv znz10_test_4.csv
+znz10_train_5.csv znz10_test_5.csv
+znz10_train_6.csv znz10_test_6.csv
+znz10_train_7.csv znz10_test_7.csv
+znz10_train_8.csv znz10_test_8.csv
+znz10_train_9.csv znz10_test_9.csv

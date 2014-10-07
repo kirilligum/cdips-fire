@@ -1,0 +1,13 @@
+#PBS -q regular
+#PBS -A m2063 
+#PBS -l mppwidth=1
+#PBS -l walltime=00:58:58
+#PBS -m n
+#PBS -V
+
+cd $PBS_O_WORKDIR
+module load anaconda
+export OMP_NUM_THREADS=1
+#python prep.py > out.txt
+#aprun -n 1 -N 1 -d 24 python rfr.py raw_trainprep.csv raw_testprep.csv > submit_pred.log
+aprun python onehot_transform.py small_train.csv small_test.csv >  oht.log
