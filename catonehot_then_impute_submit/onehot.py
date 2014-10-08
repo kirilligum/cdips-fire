@@ -74,17 +74,25 @@ class onehot:
       combine = []
       for i in self.cols:
         d = self.col_to_list(data[i])
+        #d=d.append(pd.Series([1]),index=len([d]))
+        #d[len(d)]=1
         col_nans = []
         col_nans_value = []
         nonan = d.dropna()
         median = nonan.median()
+        if np.isnan(median):
+          median=0
+        #print median
+        #print d.unique()
+        #print d
         for j,v in enumerate(d):
-          if np.isnan(d[j]):
+          if np.isnan(d[j]).any():
             col_nans += [1]
             d[j]=median
           else:
             col_nans += [0]
         if len(set(d))>1:
+          #print i, d
           tcols[i] = self.enc[i].transform([[x] for x in d.values.tolist()]).todense()
           for j,v in enumerate(tcols[i]):
             if col_nans[j]:
