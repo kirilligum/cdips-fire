@@ -12,26 +12,34 @@ class onehot:
         self.parents = []
     def col_to_list(self,dv):
         rdv = dv
-        #rdv = list(dv)
-        if 'Z' in dv:
-          enum = list(set(dv.remove('Z')))
+        #print set(dv.replace(to_replace='Z',value=np.nan).dropna())
+        #print [x for x in dv if x!='Z']
+        #print set([x for x in dv if x!='Z'])
+        if dv.isin(['Z']).any():
+          enum = list(set([x for x in dv if x!='Z']))
         else:
           enum = list(set(dv))
         enum.sort() #set is unordered; could lead to problems of column mismatch later, so best to sort....
-        for x in range(0,len(rdv)):
-            for i in range(0,len(enum)):
-                if rdv.iloc[x] == enum[i]:
-                    rdv[x] = i
-                elif rdv.iloc[x] == 'Z':
-                    rdv[x] = np.nan
+        #print"set_rdv", set(rdv),len(set(rdv)),"   enum=",enum
+        #print "len(enum) = ", len(enum)
+        #rdv = [enum.index(e) if e in enum else np.nan for e in dv]
+        rdv.replace(to_replace=enum,value=range(len(enum)),inplace=True)
+        #if rdv.str.contains('Z').any():
+          #print set(rdv)
+          #rdv[str(rdv)=='Z']=np.nan
+        #print set(rdv)
+        rdv.replace(to_replace='Z',value=np.nan,inplace=True)
+        #print type(rdv)
+        #print "set drv = ",set(list(set(rdv.tolist())))
+        #print "set drv = ",set(rdv.tolist())
+        #for x in range(0,len(rdv)):
+            #for i in range(0,len(enum)):
+                #if rdv.iloc[x] == enum[i]:
+                    #rdv[x] = i
+                #elif rdv.iloc[x] == 'Z':
+                    #rdv[x] = np.nan
+        #print"set_rdv after", set(rdv)
         return rdv
-    def var4root(self,col):
-      cdv = []
-      if not self.parents:
-          self.parents = [x[0] for x in list(set(col)) if len(x)>1 and int(x[1])==2] # truncating to the first letter and remove letters with only one number child
-          self.parents.sort()
-      cdv = [x[0] if (self.parents.count(x[0])) else 0 for x in col] # truncating to the first letter and remove letters with only one number child
-      return self.col_to_list(cdv)
     def fit(self,data,cols):
       if 'var4' in cols and 'var4r' not in cols:
         data_var4r = data['var4'].str[0]
@@ -41,10 +49,13 @@ class onehot:
       self.cols=cols
       #print self.cols
       for i in cols:
+        #print "set_data_i",set(data[i])
         d = self.col_to_list(data[i])
+        #print "set_d",set(d)
         d.dropna(inplace=True)
         #print d.shape
         #print len(set(d))
+        #print set([x for x in d.values.tolist()])
         if len(set(d))>1:
           enc =  OneHotEncoder().fit([[x] for x in d.values.tolist()])
           self.enc[i]= enc
@@ -63,28 +74,29 @@ class onehot:
       combine = []
       for i in self.cols:
         d = self.col_to_list(data[i])
+        #d=d.append(pd.Series([1]),index=len([d]))
+        #d[len(d)]=1
         col_nans = []
         col_nans_value = []
         nonan = d.dropna()
         median = nonan.median()
-        #print "median", median
+        if np.isnan(median):
+          median=0
+        #print median
+        #print d.unique()
+        #print d
         for j,v in enumerate(d):
-          #print j
-          if d[j] is np.nan:
+          if np.isnan(d[j]).any():
             col_nans += [1]
             d[j]=median
           else:
             col_nans += [0]
-        #print i, col_nans
-        #print self.enc
         if len(set(d))>1:
-          #print self.enc[i]
-          #print self.enc[i].transform([[x] for x in d.values.tolist()])
+          #print i, d
           tcols[i] = self.enc[i].transform([[x] for x in d.values.tolist()]).todense()
           for j,v in enumerate(tcols[i]):
             if col_nans[j]:
               tcols[i][j]=np.nan
-          #print i,tcols[i].shape
           #print i, [i+"_"+str(x) for x in range(tcols[i].shape[1])]
           ddd = pd.DataFrame(tcols[i],columns = [i+"_"+str(x) for x in range(tcols[i].shape[1])])
           combine += [ddd]

@@ -1,5 +1,6 @@
 #module load anaconda
-#cat znz_subset_prefix.txt | while read -r line; do python prep.py $line; done > znz10fold_prep_prefix.log
+python znz_subset.py ../data/raw_train.csv znz10
+cat znz_subset_prefix.txt | while read -r line; do python prep.py $line; done > znz10fold_prep_prefix.log
 head -n1000 raw_train.csv > small_train.csv
 head -n1000 raw_test.csv > small_test.csv
 python onehot_transform.py small_train.csv small_test.csv 

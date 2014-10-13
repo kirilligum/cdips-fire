@@ -26,8 +26,21 @@ if 'target' in data_test:
   target_test = data_test['target']
   data_test.drop('target',axis=1,inplace=True)
 
-rfr = RandomForestRegressor(n_estimators =1000,n_jobs=-1)
+rfr = RandomForestRegressor(n_estimators =1000,n_jobs=-1,oob_score=True,max_depth=4)
 rfr = rfr.fit(data_train,target_train)
+
+with open('model.txt','wt') as f:
+  print >> f, rfr
+with open('estimators_.txt','wt') as f:
+  #f.write(rfr.estimators_)
+  print >> f, rfr.estimators_
+with open('feature_importances_.txt','wt') as f:
+  print >> f, rfr.feature_importances_
+with open('oob_score_.txt','wt') as f:
+  print >> f, rfr.oob_score_
+with open('oob_prediction_.txt','wt') as f:
+  print >> f, rfr.oob_prediction_
+
 predict_loc_regres = rfr.predict(data_test)
 if 'target_test' in locals():
   score = rfr.score(data_test,target_test)

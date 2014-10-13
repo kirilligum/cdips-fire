@@ -55,7 +55,7 @@ random.shuffle(zeros)
 
 #nonzeros = nonzeros[:100]
 #zeros = zeros[:900]
-zeros = zeros[:len(nonzeros)*3]
+#zeros = zeros[:len(nonzeros)*3]
 
 folds=10
 z_incremental_subset_size = int(len(zeros)/folds);

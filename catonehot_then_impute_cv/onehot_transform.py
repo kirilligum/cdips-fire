@@ -11,14 +11,7 @@ import os
 
 log = open(os.path.splitext(sys.argv[0])[0]+'.log','wt')
 
-#filename = ("../data/subtrain.csv")
-#filename = ("znz_train_0.csv")
-#filename = ("../data/train.csv")
-#data_train = pd.read_csv(filename)
 data_train = pd.read_csv(sys.argv[1])
-#filename = ("../data/subtest.csv")
-#filename = ("../data/test.csv")
-#data_test = pd.read_csv(filename)
 data_test = pd.read_csv(sys.argv[2])
 data = pd.concat([data_train,data_test])
 print >> log,  data_train.shape, "  ", data_test.shape ,"  " , data.shape
@@ -28,6 +21,7 @@ print >> log,  " starting onehot"
 start = time.clock()
 oh = onehot()
 #oh.fit(data,['var1','var2','var3','var4','var5','var6','var7','var8','var9','dummy'])
+#oh.fit(data,['var5','dummy'])
 oh.fit(data,['var2','var4','var5','var6','var9','dummy'])
 categorical_train = oh.transform(data_train)
 #print "done with onehot"
