@@ -26,7 +26,7 @@ if 'target' in data_test:
   target_test = data_test['target']
   data_test.drop('target',axis=1,inplace=True)
 
-rfr = RandomForestRegressor(n_estimators =1000,n_jobs=-1,oob_score=True,max_depth=4)
+rfr = RandomForestRegressor(n_estimators =1000,n_jobs=-1,oob_score=True,max_depth=15)
 rfr = rfr.fit(data_train,target_train)
 
 with open('model.txt','wt') as f:

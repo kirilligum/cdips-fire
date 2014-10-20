@@ -17,22 +17,20 @@ else:
 data = pd.concat([train,test])
 print >> log,  train.shape, "  ", test.shape ,"  " , data.shape
 
-imp_discrete = Imputer(missing_values=np.nan, strategy='median', axis=0)
-imp_continuous = Imputer(missing_values=np.nan, strategy='median', axis=0)
+imp_median = Imputer(missing_values=np.nan, strategy='median', axis=0)
+imp_mean = Imputer(missing_values=np.nan, strategy='mean', axis=0)
 print >> log,sorted(list(data.columns))
-original_nominal = ['var2','var4','var5','var6','var9','dummy']
-discrete_nominal = [x for x in train.columns if any(y in x for y in original_nominal)]
-#discrete_nominal = [x for x in train.columns if "_" in x]
+discrete_nominal_orig = [ x+"_" for x in ['var2','var4','var5','var6','var9','dummy']]
+discrete_nominal = [x for x in train.columns if "_" in x]
 discrete_ordinal = ['var1','var3','var7','var8']
 discrete = discrete_nominal+discrete_ordinal
-print >> log, "discrete", discrete
-imp_discrete.fit(data[discrete])
-continuous = train.ix[:,'var10':'var17'].columns + train.ix[:,'crimeVar1':'weatherVar236'].columns
-imp_continuous.fit(data[continuous])
-train_imp_median = pd.DataFrame(imp_discrete.transform(train[discrete]),columns=train[discrete].columns)
-train_imp_mean = pd.DataFrame(imp_continuous.transform(train[continuous]),columns=train[continuous].columns)
-test_imp_median = pd.DataFrame(imp_discrete.transform(test[discrete]),columns=test[discrete].columns)
-test_imp_mean = pd.DataFrame(imp_continuous.transform(test[continuous]),columns=test[continuous].columns)
+imp_median.fit(data[discrete])
+continuous = train.ix[:,'var10':'var17'].columns
+imp_mean.fit(data[continuous])
+train_imp_median = pd.DataFrame(imp_median.transform(train[discrete]),columns=train[discrete].columns)
+train_imp_mean = pd.DataFrame(imp_mean.transform(train[continuous]),columns=train[continuous].columns)
+test_imp_median = pd.DataFrame(imp_median.transform(test[discrete]),columns=test[discrete].columns)
+test_imp_mean = pd.DataFrame(imp_mean.transform(test[continuous]),columns=test[continuous].columns)
 id_train = data_train_in.ix[:,'id']
 id_test = data_test_in.ix[:,'id']
 train_imp = pd.concat([id_train,train_imp_median,train_imp_mean],axis=1)
