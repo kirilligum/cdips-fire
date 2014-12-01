@@ -82,9 +82,9 @@ print >>log,data_test.shape
 end = time.clock()
 print >> log,  "time = ", end-start
 
-train_filename = (os.path.splitext(os.path.basename(sys.argv[1]))[0]+"_ohtrans.csv")
+train_filename = (os.path.splitext(os.path.basename(sys.argv[1]))[0]+"_oh.csv")
 data_train.to_csv(train_filename,index=0)
-test_filename = (os.path.splitext(os.path.basename(sys.argv[2]))[0]+"_ohtrans.csv")
+test_filename = (os.path.splitext(os.path.basename(sys.argv[2]))[0]+"_oh.csv")
 data_test.to_csv(test_filename,index=0)
 
 log.close()
