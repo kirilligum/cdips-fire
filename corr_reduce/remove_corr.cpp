@@ -2,7 +2,6 @@
 #include <sstream>
 #include <iostream>
 #include <vector>
-#include <tuple>
 #include <cmath>
 #include <algorithm>
 //#include "prettyprint.hpp"
@@ -24,9 +23,8 @@ vector<vector<string>> loadtxt(char filename[]){
   return table;
 }
 
-auto columns_over_threshold(const vector<vector<string>> &table, double threshold) {
+vector<size_t> columns_over_threshold(const vector<vector<string>> &table, double threshold) {
   vector<size_t> exclude_columns;
-  vector<string> exclude_columns_name;
   for(size_t row=0; row<table.size();++row){
     vector<string> matched;
     matched.push_back(table[row].front());
@@ -37,7 +35,6 @@ auto columns_over_threshold(const vector<vector<string>> &table, double threshol
           matched.push_back(table[row][i]);
           if(i>row)
             exclude_columns.push_back(i);
-            exclude_columns_name.push_back(table.front()[i]);
           correlated.push_back(i);
         }
       }
@@ -53,8 +50,7 @@ auto columns_over_threshold(const vector<vector<string>> &table, double threshol
       cout << endl;
     }
   }
-  //return {exclude_columns,exclude_columns_name};
-  return make_tuple(exclude_columns,exclude_columns_name);
+  return exclude_columns;
 }
 
 int main(int argc, char* argv[]){
@@ -63,8 +59,11 @@ int main(int argc, char* argv[]){
   auto table = loadtxt(argv[1]);
   auto exclude_columns = columns_over_threshold(table,threshold);
 
-  cout << "total " << get<1>(exclude_columns).size()<< endl;
-  for(auto i : get<1>(exclude_columns)) cout << i << " ";
+  cout << "total " << exclude_columns.size()<< endl;
+  for(auto i : exclude_columns) cout << i << " ";
   cout << endl;
+  for(auto i : exclude_columns) cout << table.front()[i] << " ";
+  cout << endl;
+  //cout << exclude_columns<< endl;
   return 0;
 }
