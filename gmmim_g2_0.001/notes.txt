@@ -1,0 +1,19 @@
+I should do gmm just with the diagonal fit where covariance is a diagonal matrix. non-diagonal matrix would rrecure some adjustment of average and variance. 
+
+non-diagonal aka full gmm would get the patterns between then features. we can do that also with random forest. we can cut down on calculation cost by using a few trees.
+
+regression, however, would decrease the variance and result in overfitting. we need to use gmm to sample again.
+
+
+an appropriate method would be to do gmm, rf then gmm again and may be repeate a few times.
+
+since mean stays the same, with gmm, it doesn't mater to get more complicated in that direction.
+
+
+as a check for convergence of imputed value, look at max-min of the means
+
+done solving a problem to impute for the whole set.
+
+looked at the change in the mean. it's a random walk. the conclusion is to use gmm just to randomize the mean.
+
+

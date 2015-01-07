@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "rfr.py", line 2, in <module>
+    import pandas as pd
+  File "/global/homes/k/kirillig/modules/anaconda/2.0.1/lib/python2.7/site-packages/pandas/__init__.py", line 6, in <module>
+    from . import hashtable, tslib, lib
+  File "numpy.pxd", line 157, in init pandas.hashtable (pandas/hashtable.c:22315)
+  File "/usr/common/usg/python/numpy/1.7.1/lib/python/numpy/__init__.py", line 137, in <module>
+    import add_newdocs
+  File "/usr/common/usg/python/numpy/1.7.1/lib/python/numpy/add_newdocs.py", line 9, in <module>
+    from numpy.lib import add_newdoc
+  File "/usr/common/usg/python/numpy/1.7.1/lib/python/numpy/lib/__init__.py", line 4, in <module>
+    from type_check import *
+  File "/usr/common/usg/python/numpy/1.7.1/lib/python/numpy/lib/type_check.py", line 8, in <module>
+    import numpy.core.numeric as _nx
+  File "/usr/common/usg/python/numpy/1.7.1/lib/python/numpy/core/__init__.py", line 5, in <module>
+    import multiarray
+ImportError: /usr/common/usg/python/numpy/1.7.1/lib/python/numpy/core/multiarray.so: undefined symbol: PyUnicodeUCS2_AsASCIIString
+Command exited with non-zero status 1
+0.03user 0.17system 0:04.54elapsed 4%CPU (0avgtext+0avgdata 7024maxresident)k
+1725inputs+2outputs (3major+3205minor)pagefaults 0swaps

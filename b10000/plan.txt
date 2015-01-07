@@ -1,0 +1,6 @@
+todo:
+set up cross validation use linear regression to be quick
+make 2 models using xrt and adaboost
+play around with L1
+identify with other methods
+set up mixture of models

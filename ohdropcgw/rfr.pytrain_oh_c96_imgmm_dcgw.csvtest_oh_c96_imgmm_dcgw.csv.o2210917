@@ -1,0 +1,22 @@
+/scratch1/scratchdirs/kirillig/cdips-fire/ohdropcgw
+/usr/common/usg/python/numpy/1.7.1/lib/python/numpy/core/multiarray.so: undefined symbol: PyUnicodeUCS2_AsASCIIString
+Application 9261261 exit codes: 1
+Application 9261261 resources: utime ~0s, stime ~0s, Rss ~7024, inblocks ~1746, outblocks ~31
+
+ + --------------------------------------------------------------------------
+ +        Job name: rfr.pytrain_oh_c96_imgmm_dcgw.csvtest_oh_c96_imgmm_dcgw.csv
+ +          Job Id: 2210917.edique02
+ +          System: edison
+ +     Queued Time: Sun Dec 21 13:22:49 2014
+ +      Start Time: Mon Dec 22 19:51:26 2014
+ + Completion Time: Mon Dec 22 19:51:41 2014
+ +            User: kirillig
+ +        MOM Host: nid02048
+ +           Queue: reg_small
+ +  Req. Resources: mppnodect=1,mppnppn=24,mppwidth=24,walltime=05:58:58
+ +  Used Resources: cput=00:00:01,mem=0kb,vmem=0kb,walltime=00:00:17
+ +     Acct String: m2063
+ +   PBS_O_WORKDIR: /scratch1/scratchdirs/kirillig/cdips-fire/ohdropcgw
+ +     Submit Args: -V -q regular -A m2063 -l mppwidth=24 -l walltime=05:58:58 -N rfr.pytrain_oh_c96_imgmm_dcgw.csvtest_oh_c96_imgmm_dcgw.csv
+ + --------------------------------------------------------------------------
+

@@ -1,0 +1,54 @@
+I didn't have much time to work on this competition, so I kind of brute forced
+my way through it, without deep exploratory studies of the features.
+
+My submission uses 1000 individual estimators in total.
+
+Half are GBMs and half are Extra Trees.
+
+I heavily undersampled the data.
+
+Each estimator deals with approx 10K data points.
+
+As for the features, half of the estimators deal with only the contract related
+data.
+
+The other half uses sklearn's feature selection to pick top 150 features from
+contract + crime + geodem + weather.
+
+Note that each estimator runs its own feature selection based on its 10K data
+points.
+
+There's one little trick I used, which I guess others have also done.
+
+Instead of predicting the losses directly, I took the logarithm, and predicted
+on that.
+
+The total training + predicting time on my several years old laptop is around
+5-6 hours.
+
+#9 | Posted 3 months agobarisumog's image  barisumog  
+
+
+
+**** bari'splan:
+** do:
+10k samples baskets
+250 gbr 150 features from total
+250 xfr 150 features from total
+250 gbr contract
+250 xfr contract
+average all estimators
+log(target)
+** do additional:
+no log
+xfr for averaging
+****
+
+
+**** currently:
+0.  don't copy data files
+1.  create python script to do models and average them, also output data for each model.
+    use bsample to test our the script
+2. run a loop that creates files, changes to the directory and lunches the file. 
+
+
