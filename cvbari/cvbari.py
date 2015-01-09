@@ -52,38 +52,20 @@ class mixmodels:
     def predict(self,data_test):
         mix_test_list = []
 
-        #start_gbr_tr = time.clock()
         transformed_test_gbr = self.gbr.transform(data_test,threshold="0.35*mean")
         mix_test_list += [pd.Series(self.gbr_tr_fit.predict(transformed_test_gbr))]
-        #end_gbr_tr = time.clock()
-        #print >> log, "time_gbr_tr = ", end_gbr_tr-start_gbr_tr
 
-        #start_xfr_tr = time.clock()
         transformed_test_xfr = self.xfr.transform(data_test,threshold="0.35*mean")
         mix_test_list += [pd.Series(self.xfr_tr_fit.predict(transformed_test_xfr))]
-        #end_xfr_tr = time.clock()
-        #print >> log, "time_xfr_tr = ", end_xfr_tr-start_xfr_tr
 
-        #start_gbr_cat = time.clock()
         mix_test_list += [pd.Series(self.gbr_cat_fit.predict(data_test[self.catcol]))]
-        #end_gbr_cat = time.clock()
-        #print >> log, "time_gbr_cat = ", end_gbr_cat-start_gbr_cat
 
-        #start_xfr_cat = time.clock()
         mix_test_list += [pd.Series(self.xfr_cat_fit.predict(data_test[self.catcol]))]
-        #end_xfr_cat = time.clock()
-        #print >> log, "time_xfr_cat = ", end_xfr_cat-start_xfr_cat
 
-        #start_xfr_mix = time.clock()
         mix_test = pd.concat(mix_test_list,1)
-        #with open('feature_importances_.txt','wt') as f:
-        #end_xfr_mix = time.clock()
-        #print >> log, "time_xfr_mix = ", end_xfr_mix-start_xfr_mix
 
-        #start_mix_ave = time.clock()
         mix_ave = mix_test.mean(1)
         mix_ave.name='target'
-        #end_mix_ave = time.clock()
 
         return mix_ave
     def score(self,data_test,target_test):
@@ -95,6 +77,17 @@ class mixmodels:
         total_score += [ self.gbr_cat_fit.score(data_test[self.catcol],target_test) ]
         total_score += [ self.xfr_cat_fit.score(data_test[self.catcol],target_test) ]
         return sum(total_score)/float(len(total_score))
+
+    def gini(self,data_test,target_test):
+        weight = data_test.var11
+        gns = []
+        transformed_test_gbr = self.gbr.transform(data_test,threshold="0.35*mean")
+        gns += [normalized_weighted_gini(target_test.tolist(),self.gbr_tr_fit.predict(transformed_test_gbr).tolist(),weight.tolist()) ]
+        transformed_test_xfr = self.xfr.transform(data_test,threshold="0.35*mean")
+        gns += [normalized_weighted_gini(target_test.tolist(),self.xfr_tr_fit.predict(transformed_test_xfr).tolist(),weight.tolist()) ]
+        gns += [normalized_weighted_gini(target_test.tolist(),self.gbr_cat_fit.predict(data_test[self.catcol]).tolist(),weight.tolist()) ]
+        gns += [normalized_weighted_gini(target_test.tolist(),self.xfr_cat_fit.predict(data_test[self.catcol]).tolist(),weight.tolist()) ]
+        return sum(gns)/float(len(gns))
 
 log = open(os.path.splitext(sys.argv[0])[0]+'.log','wt')
 
@@ -113,9 +106,10 @@ for train_index, test_index in skf:
     mm = mixmodels(nest=10)
     mm.fit(data_train.iloc[train_index],target_train.iloc[train_index])
     scores += [mm.score(data_train.iloc[test_index],target_train.iloc[test_index])]
+    gns += [mm.gini(data_train.iloc[test_index],target_train.iloc[test_index])]
     predict_loc_regres = mm.predict(data_train.iloc[test_index])
     #print 'gini inputs   ',target_train.iloc[test_index],predict_loc_regres,data_train.iloc[test_index].var11
-    gns += [normalized_weighted_gini(target_train.iloc[test_index].tolist(),predict_loc_regres.tolist(),data_train.iloc[test_index].var11.tolist() )]
+    #gns += [normalized_weighted_gini(target_train.iloc[test_index].tolist(),predict_loc_regres.tolist(),data_train.iloc[test_index].var11.tolist() )]
 score = sum(scores)/float(len(scores))
 gn = sum(gns)/float(len(gns))
 print scores
