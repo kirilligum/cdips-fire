@@ -4,6 +4,7 @@ import pandas as pd
 import time
 from sklearn.ensemble import ExtraTreesRegressor
 from sklearn.ensemble import GradientBoostingRegressor
+from sklearn import cross_validation
 #from sklearn.metrics import accuracy_score
 #from sklearn.metrics import r2_score
 #from gini import normalized_weighted_gini
@@ -17,31 +18,31 @@ class mixmodels:
         self.target_train = target
         self.catcol = data_train.filter(like='var').columns.tolist()
         #start_gbr_tr = time.clock()
-        self.gbr = GradientBoostingRegressor(n_estimators =1,max_depth=7)
+        self.gbr = GradientBoostingRegressor(n_estimators =100,max_depth=7)
         self.gbr.fit(data_train,self.target_train)
         self.transformed_train_gbr = self.gbr.transform(data_train,threshold="0.35*mean")
-        self.gbr_tr_fit = GradientBoostingRegressor(n_estimators =1,max_depth=7)
+        self.gbr_tr_fit = GradientBoostingRegressor(n_estimators =100,max_depth=7)
         self.gbr_tr_fit.fit(self.transformed_train_gbr,self.target_train)
         #end_gbr_tr = time.clock()
         #print >> log, "time_gbr_tr = ", end_gbr_tr-start_gbr_tr
 
         #start_xfr_tr = time.clock()
-        self.xfr= ExtraTreesRegressor(n_estimators =1,max_depth=7)
+        self.xfr= ExtraTreesRegressor(n_estimators =100,max_depth=7)
         self.xfr.fit(data_train,self.target_train)
-        transformed_train_xfr = self.xfr.transform(data_train,threshold="0.35*mean")
-        self.xfr_tr_fit = ExtraTreesRegressor(n_estimators =1,max_depth=7)
-        self.xfr_tr_fit.fit(transformed_train_xfr,self.target_train)
+        self.transformed_train_xfr = self.xfr.transform(data_train,threshold="0.35*mean")
+        self.xfr_tr_fit = ExtraTreesRegressor(n_estimators =100,max_depth=7)
+        self.xfr_tr_fit.fit(self.transformed_train_xfr,self.target_train)
         #end_xfr_tr = time.clock()
         #print >> log, "time_xfr_tr = ", end_xfr_tr-start_xfr_tr
 
         #start_gbr_cat = time.clock()
-        self.gbr_cat_fit = GradientBoostingRegressor(n_estimators =1,max_depth=7)
+        self.gbr_cat_fit = GradientBoostingRegressor(n_estimators =100,max_depth=7)
         self.gbr_cat_fit.fit(data_train[self.catcol],self.target_train)
         #end_gbr_cat = time.clock()
         #print >> log, "time_gbr_cat = ", end_gbr_cat-start_gbr_cat
 
         #start_xfr_cat = time.clock()
-        self.xfr_cat_fit = ExtraTreesRegressor(n_estimators =1,max_depth=7)
+        self.xfr_cat_fit = ExtraTreesRegressor(n_estimators =100,max_depth=7)
         self.xfr_cat_fit.fit(data_train[self.catcol],self.target_train)
         #end_xfr_cat = time.clock()
         #print >> log, "time_xfr_cat = ", end_xfr_cat-start_xfr_cat
@@ -52,17 +53,13 @@ class mixmodels:
 
         #start_gbr_tr = time.clock()
         transformed_test_gbr = self.gbr.transform(data_test,threshold="0.35*mean")
-        gbr_tr_fit = GradientBoostingRegressor(n_estimators =1,max_depth=7)
-        gbr_tr_fit.fit(self.transformed_train_gbr,self.target_train)
-        mix_test_list += [pd.Series(gbr_tr_fit.predict(transformed_test_gbr),index=data_test_in.id.astype(int),name='gbr_tr')]
+        mix_test_list += [pd.Series(self.gbr_tr_fit.predict(transformed_test_gbr),index=data_test_in.id.astype(int),name='gbr_tr')]
         #end_gbr_tr = time.clock()
         #print >> log, "time_gbr_tr = ", end_gbr_tr-start_gbr_tr
 
         #start_xfr_tr = time.clock()
         transformed_test_xfr = self.xfr.transform(data_test,threshold="0.35*mean")
-        xfr_tr_fit = ExtraTreesRegressor(n_estimators =1,max_depth=7)
-        xfr_tr_fit.fit(self.transformed_train_xfr,self.target_train)
-        mix_test_list += [pd.Series(xfr_tr_fit.predict(transformed_test_xfr),index=data_test_in.id.astype(int),name='xfr_tr')]
+        mix_test_list += [pd.Series(self.xfr_tr_fit.predict(transformed_test_xfr),index=data_test_in.id.astype(int),name='xfr_tr')]
         #end_xfr_tr = time.clock()
         #print >> log, "time_xfr_tr = ", end_xfr_tr-start_xfr_tr
 
@@ -88,6 +85,15 @@ class mixmodels:
         #end_mix_ave = time.clock()
 
         return mix_ave
+    def score(self,data_test,target_test):
+        total_score = []
+        transformed_test_gbr = self.gbr.transform(data_test,threshold="0.35*mean")
+        total_score += [ self.gbr_tr_fit.score(transformed_test_gbr,target_test) ]
+        transformed_test_xfr = self.xfr.transform(data_test,threshold="0.35*mean")
+        total_score += [ self.xfr_tr_fit.score(transformed_test_xfr,target_test) ]
+        total_score += [ self.gbr_cat_fit.score(data_test[self.catcol],target_test) ]
+        total_score += [ self.xfr_cat_fit.score(data_test[self.catcol],target_test) ]
+        return sum(total_score)/float(len(total_score))
 
 log = open(os.path.splitext(sys.argv[0])[0]+'.log','wt')
 
@@ -103,9 +109,17 @@ if 'target' in data_test:
   target_test = data_test_in['target']
   data_test.drop('target',axis=1,inplace=True)
 
-mm = mixmodels
-mm.fit(data_train,target_train)
-mix_ave = mm.predict(data_test)
+scores = []
+skfclasses = [1 if x>0 else 0 for x in target_train]
+skf = cross_validation.StratifiedKFold(skfclasses,n_folds=5)
+for train_index, test_index in skf:
+    mm = mixmodels()
+    mm.fit(data_train.iloc[train_index],target_train.iloc[train_index])
+    scores += [mm.score(data_train.iloc[test_index],target_train.iloc[test_index])]
+    #mix_ave = mm.predict(data_test)
+score = sum(scores)/float(len(scores))
+print scores
+print'score = ', score
 
 end = time.clock()
 
