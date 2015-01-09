@@ -46,6 +46,6 @@ xfr for averaging
 
 
 **** currently:
-cv
+[done] cv
 gini 
 log option
